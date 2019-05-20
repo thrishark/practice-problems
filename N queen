@@ -1,0 +1,73 @@
+/******************************************************************************
+
+                            Online C Compiler.
+                Code, Compile, Run and Debug C program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <stdio.h>
+
+#define N 4
+
+void pathtracker(int board[N+1][N+1],int n,int qr,int qc,int flag){
+    
+    int qrflag,row,col;
+    qrflag = qr*flag;
+    for(row=1;row<n;row++)
+        for(col=1;col<n;col++)
+            if(qr == row || qc == col || col+row == qr+qc || row-col == qr-qc)
+                board[row][col]+=qrflag;
+}
+
+void display(int board[N+1][N+1],int n){
+    
+    int row,col;
+     for(row=1;row<n;row++,printf("\n"))
+        for(col=1;col<n;col++)
+            printf("%d ",board[row][col]);
+    printf("\n");
+    
+}
+
+int main()
+{
+    int board[N+1][N+1];
+    int queenCol[N+1];
+    int row,col,n;
+    n=N+1;
+    for(row=1;row<n;row++)
+        for(col=1;col<n;col++)
+            board[row][col]=0;
+    /*
+    pathtracker(board,n,2,2,1);
+    display(board,n);
+    pathtracker(board,n,2,2,-1);
+    display(board,n);
+    */
+    
+        
+        for(row=1;row<n;row++){
+            for(col=1;col<n;col++){
+                if(!board[row][col]){
+                    pathtracker(board,n,row,col,1);
+                    queenCol[row]=col;
+                }
+            }
+            
+            if(col>N){
+                row--;
+                pathtracker(board,n,row,queenCol[row],-1);
+                    for(col=queenCol[row]+1;col<n;col++){
+                        if(!board[row][col]){
+                            pathtracker(board,n,row,col,1);
+                            queenCol[row]=col;
+                        }
+                    }
+            }
+        }
+        
+    
+    
+    return 0;
+}
