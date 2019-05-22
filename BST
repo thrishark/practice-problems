@@ -1,0 +1,171 @@
+#include<stdio.h>
+#include<malloc.h>
+
+typedef struct node{
+    
+    int data;
+    struct node * left;
+    struct node * right;
+    
+}NODE;
+
+typedef struct qnode{
+    
+    NODE * tadd;
+    struct qnode * qnext;
+    
+}QNODE;
+
+void inorder(NODE *gptr){
+    
+    if(gptr == NULL)
+        return;
+    
+    inorder(gptr->left);
+    printf("%d ",gptr->data);
+    inorder(gptr->right);
+}
+
+
+void preorder(NODE *gptr){
+    
+    if(gptr == NULL)
+        return;
+    
+    printf("%d ",gptr->data);
+    inorder(gptr->left);
+    inorder(gptr->right);
+}
+
+
+void postorder(NODE *gptr){
+    
+    if(gptr == NULL)
+        return;
+    
+    inorder(gptr->left);
+    inorder(gptr->right);
+    printf("%d ",gptr->data);
+}
+
+void enQ(NODE * gptr,QNODE ** frontPtr, QNODE **rearPtr){
+    
+    QNODE *newnode;
+    
+    newnode = (QNODE *)malloc(sizeof(QNODE));
+    newnode->tadd = gptr;
+    newnode->qnext = NULL;
+    
+    if((*frontPtr) == NULL || (*rearPtr) == NULL){
+        (*frontPtr) = newnode;
+        (*rearPtr) = newnode;
+    }
+    else{
+        
+        (*rearPtr)->qnext = newnode;
+        (*rearPtr) = newnode;
+        
+    }
+}
+
+NODE* deQ(QNODE **frontPtr, QNODE **rearPtr){
+    
+    
+    NODE * toReturn;
+    toReturn = NULL;
+    QNODE * toFree;
+    
+    if(*rearPtr == NULL || *frontPtr == NULL)
+        return toReturn;
+    else{
+        toReturn = (*frontPtr)->tadd;
+        toFree = (*frontPtr);
+        *frontPtr = (*frontPtr)->qnext;
+        free(toFree);
+        return toReturn;
+    }
+    
+}
+
+void levelorder(NODE *gptr){
+    
+    QNODE * front, *rear;
+    front = NULL;
+    rear = NULL;
+    
+    NODE * tptr;
+    tptr = NULL;
+    
+    enQ(gptr,&front,&rear);
+    
+    while(1){
+        
+        tptr = deQ(&front,&rear);
+        if(tptr == NULL)
+            break;
+            
+            printf("%d ",tptr->data);
+            if(tptr->left != NULL)
+                enQ(tptr->left,&front,&rear);
+            if(tptr->right != NULL)
+                enQ(tptr->right,&front,&rear);
+        
+    }
+    
+}
+
+void addNode(NODE **rootPtr,int input){
+    
+    NODE *newnode,*tptr,*prev;
+    newnode=(NODE *)malloc(sizeof(NODE));
+    newnode->data=input;
+    newnode->left=NULL;
+    newnode->right=NULL;
+    
+    if((* rootPtr) == NULL)
+        (*rootPtr)=newnode;
+    else{
+        
+        tptr = *rootPtr;
+        while(tptr){
+            prev=tptr;
+            if(input < tptr->data )
+                tptr=tptr->left;
+            else
+                tptr=tptr->right;
+        }
+        if(input < prev->data)
+            prev->left = newnode;
+        else
+            prev->right = newnode;
+    }
+}
+
+int main(){
+    
+    NODE * root=NULL;
+    
+    addNode(&root,50);
+    addNode(&root,30);
+    addNode(&root,70);
+    addNode(&root,20);
+    addNode(&root,40);
+    addNode(&root,80);
+    addNode(&root,60);
+    
+    printf("IN ORDER\n");
+    
+    inorder(root);
+    
+    printf("\nPRE ORDER\n");
+    
+    preorder(root);
+    
+    printf("\nPOST ORDER\n");
+    
+    postorder(root);
+    
+    printf("\nLEVEL ORDER\n");
+    
+    levelorder(root);
+}
