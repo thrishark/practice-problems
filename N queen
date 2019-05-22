@@ -1,25 +1,21 @@
-/******************************************************************************
-
-                            Online C Compiler.
-                Code, Compile, Run and Debug C program online.
-Write your code in this editor and press "Run" button to compile and execute it.
-
-*******************************************************************************/
-
 #include <stdio.h>
 
-#define N 4
+#define N 8
+
 
 void pathtracker(int board[N+1][N+1],int n,int qr,int qc,int flag){
     
     int qrflag,row,col;
+    // if flag is 1, adds the row val else subtracts
     qrflag = qr*flag;
+    
     for(row=1;row<n;row++)
         for(col=1;col<n;col++)
             if(qr == row || qc == col || col+row == qr+qc || row-col == qr-qc)
                 board[row][col]+=qrflag;
 }
 
+// displays board after adding or subtracting values
 void display(int board[N+1][N+1],int n){
     
     int row,col;
@@ -32,42 +28,42 @@ void display(int board[N+1][N+1],int n){
 
 int main()
 {
-    int board[N+1][N+1];
-    int queenCol[N+1];
-    int row,col,n;
+    int board[N+1][N+1]={0};
+    int queenCol[N+1]={0};
+    int row,col,n,safe=0;
     n=N+1;
-    for(row=1;row<n;row++)
-        for(col=1;col<n;col++)
-            board[row][col]=0;
-    /*
-    pathtracker(board,n,2,2,1);
-    display(board,n);
-    pathtracker(board,n,2,2,-1);
-    display(board,n);
-    */
     
-        
-        for(row=1;row<n;row++){
-            for(col=1;col<n;col++){
-                if(!board[row][col]){
-                    pathtracker(board,n,row,col,1);
-                    queenCol[row]=col;
-                }
-            }
-            
-            if(col>N){
-                row--;
-                pathtracker(board,n,row,queenCol[row],-1);
-                    for(col=queenCol[row]+1;col<n;col++){
-                        if(!board[row][col]){
-                            pathtracker(board,n,row,col,1);
-                            queenCol[row]=col;
-                        }
-                    }
+    row=1;
+    safe=0;
+    while(row<n){
+        for(col=safe+1;col<n;col++){
+            if(!board[row][col]){
+                pathtracker(board,n,row,col,1);
+                queenCol[row]=col;
+                row++;
+                safe=0;
+                break;
             }
         }
-        
+            
+        if(col>N){
+            //backtrack as there is no place in current row
+            row--;
+            pathtracker(board,n,row,queenCol[row],-1);
+            safe=queenCol[row];
+            queenCol[row]=0;
+        }
+    }
     
+    //display
+    for(row=1;row<n;row++,printf("\n"))
+        for(col=1;col<n;col++){
+            if(queenCol[row] == col)
+                printf("1 ");
+            else
+                printf("0 ");
+        }
+            
     
     return 0;
 }
