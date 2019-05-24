@@ -1,0 +1,44 @@
+#include <stdio.h>
+#define N 9
+
+int solve(int board[9][9],int crow,int ccol){
+    
+    for(row= crow;row<9;row++)
+        if(board[crow][ccol] == row)
+            return 0;
+    for(col= ccol;col<9;col++)
+        if(board[crow][ccol] == col)
+            return 0;
+    for()
+    
+}
+
+
+int main() {
+    int i,j,n,t board[9][9]={0},row,col;
+    scanf("%d",&t);
+    n=9;
+    
+    while(t--){
+        
+        for(row=0;row<n;row++)
+            for(col=0;col<n;col++)
+                scanf("%d",&board[row][col]) 
+       
+       
+        for(row=0;row<n;row++){
+            
+             int value=0;
+            
+            for(col=0;col<n;col++){
+                // getVal(board[row][col])
+                if(!board[row][col])
+                    board[row][col] = ++value;
+                    
+                if(!solve(board,row,col)) board[row][col]=0;
+                
+            }
+        }
+    }
+	return 0;
+}
