@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include<limits.h>
+#include<malloc.h>
+#define N 3
+#define EMPTY 0
+
+typedef struct node{
+    
+    int data;
+    struct node * next;
+}NODE;
+
+typedef *NODE NODE_PTR;
+NODE_PTR src, des, tem,newnode,safe;
+
+
+void initialize(){
+    
+    newnode=(NODE_PTR)malloc(sizeof(NODE));
+    newnode->data = INT_MAX;
+    newnode->next = NULL;
+    
+    src = des = tem = newnode;
+    
+    for(i=0;i<N;i++){
+        
+        newnode=(NODE_PTR)malloc(sizeof(NODE));
+        newnode->data = i+1;
+        newnode->next = src;
+        src = newnode;
+    
+    }
+}
+
+
+void solve(){
+    while(1){
+        
+        if(src->data < des->data){
+            safe = src;
+            src=src->next;
+            safe->next =des;
+            des=safe; 
+        }
+        else{
+            safe = des;
+            des=des->next;
+            safe->next =src;
+            src=safe;
+        }
+        
+        
+        if(src->data == INT_MAX &&  )
+        
+        if(src->data < tem->data){
+            safe = src;
+            src=src->next;
+            safe->next =tem;
+            tem=safe; 
+        }
+        else{
+            safe = tem;
+            tem=tem->next;
+            safe->next =src;
+            src=safe;
+        }
+        
+        if(des->data < tem->data){
+            safe = des;
+            des=des->next;
+            safe->next =tem;
+            tem=safe; 
+        }
+        else{
+            safe = des;
+            des=des->next;
+            safe->next =tem;
+            tem=safe; 
+        }
+        
+        
+        
+    }
+   
+}
+
+int main()
+{
+    initialize();
+    solve();
+    return 0;
+}
