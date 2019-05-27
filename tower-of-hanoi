@@ -1,0 +1,91 @@
+#include <stdio.h>
+#define N 3
+#define EMPTY 0
+
+int src[N+1],des[N+1],tem[N+1];
+int stop,dtop,ttop,count;
+
+void initialize(){
+    int i;
+    for(i=0;i<N;i++)
+        src[i]=i+1;
+    for(i=0;i<N;i++)
+        des[i]=tem[i]=EMPTY;
+    stop=0;
+    count = 0;
+    dtop=ttop=N;
+    src[N]=des[N]=tem[N]=100;
+}
+
+void print(){
+    int i;
+    for(i=0;i<N;i++)
+        printf("%2d %2d %2d\n",src[i],des[i],tem[i]);
+    printf("\n\n");
+}
+
+void solve(){
+    while(1){
+        
+        if(src[stop]<des[dtop] ){
+            des[--dtop]=src[stop];
+            src[stop]=EMPTY;
+            stop++;
+        }
+        else{
+            src[--stop]=des[dtop];
+            des[dtop]=EMPTY;
+            dtop++;
+        }
+        
+        ++count;
+        print();
+        if(dtop == 0 || ttop == 0)
+            return;
+            
+        if(src[stop]<tem[ttop] ){
+            tem[--ttop]=src[stop];
+            src[stop]=EMPTY;
+            stop++;
+        }
+        else{
+            src[--stop]=tem[ttop];
+            tem[ttop]=EMPTY;
+            ttop++;
+        }
+        
+        ++count;
+        print();
+        if(dtop == 0 || ttop == 0)
+            return;
+        
+        if(des[dtop]<tem[ttop] ){ 
+            tem[--ttop]=des[dtop];
+            des[dtop]=EMPTY;
+            dtop++;
+        }
+        else{
+            des[--dtop]=tem[ttop];
+            tem[ttop]=EMPTY;
+            ttop++;
+        }
+        
+        ++count;
+        print();
+        if(dtop == 0 || ttop == 0)
+            return;
+        
+    }
+   
+}
+
+int main()
+{
+    initialize();
+    print();
+    solve();
+    printf("After solving : \n");
+    print();
+    printf("The number of moves is %d ",count);
+    return 0;
+}
