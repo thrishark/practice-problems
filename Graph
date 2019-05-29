@@ -106,7 +106,7 @@ void addToList(HEAD *headptr,char s,char e,int wt){
         headptr->nnext = newnode;
     }
     else{
-        for(tptr=headptr->nnext;tptr && ((tptr->ch) < e);tptr=tptr->next);
+        for(prev=NULL,tptr=headptr->nnext;tptr && (tptr->ch)<e;prev=tptr,tptr=tptr->next);
         
         if(tptr == headptr->nnext){
             newnode->next = headptr->nnext;
@@ -143,21 +143,23 @@ void createHeader(char s,char e,int wt){
                     hprev->hnext = newHeader;
                 }
                 else{
-                    newHeader->hnext = hptr;
+                    newHeader->hnext = hprev->hnext;
                     hprev->hnext = newHeader;
                 }
             }
             hptr = newHeader;
+            
         }
+            
         addToList(hptr,hptr->headName,e, wt);
 }
 
 void printLLOfLL(){
     
     for(printf("\n"),hptr = hstart;hptr;hptr=hptr->hnext){
-        printf("%c\t\t",hptr->headName);
+        printf("%c ",hptr->headName);
         for(tptr = hptr->nnext;tptr;tptr =tptr->next){
-            printf("%c(%d) ",tptr->ch,tptr->w);
+            printf("-(%d)-> %c ",tptr->w,tptr->ch);
         }
         printf("\n");
     }
@@ -172,10 +174,9 @@ void createLLofLL(){
         s=data[i].ch1;
         e=data[i].ch2;
         wt=data[i].w;
-        
         createHeader(s,e,wt);
+        createHeader(e,s,wt);
     }
-    printLLOfLL();
 }
 
 
@@ -183,18 +184,17 @@ int main()
 {
         
     
-    /*createAdjacencyMat();
+    createAdjacencyMat();
     printAdjacencyMatrix();
     
     printf("\n\n");
     
     createArrOfLL();
     printArrOfLL();
-    */
     
-    createHeader('A','B',5);
-    createHeader('E','D',15);
-    createHeader('Z','D',15);
+    printf("\n\n");
+    
+    createLLofLL();
     printLLOfLL();
     
     return 0;
