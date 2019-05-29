@@ -1,0 +1,201 @@
+#include <stdio.h>
+#include<malloc.h>
+#define NOV 6
+#define NOE 5
+typedef struct edge{
+    char ch1;
+    char ch2;
+    int w;
+}EDGE;
+
+EDGE data[]={{'A','B',2}, {'A','C',3},{'C','D',4},{'D','E',5},{'B','F',6}};
+
+int ajmat[NOV][NOV];
+
+typedef struct node{
+    char ch;
+    int w;
+    struct node * next;
+}NODE;
+
+NODE *header[NOV];
+NODE *newnode,*tptr,*prev;
+
+typedef struct head{
+    char headName;
+    struct head *hnext;
+    NODE *nnext;
+}HEAD;
+
+HEAD *hptr,*hprev,*hstart,*newHeader;
+
+
+
+void createAdjacencyMat(){
+    
+    int i,j;
+    for(i=0;i<NOE;i++){
+        ajmat[data[i].ch1 - 65][data[i].ch2-65]=data[i].w;
+        ajmat[data[i].ch2 - 65][data[i].ch1-65]=data[i].w;
+    }
+}
+
+void printAdjacencyMatrix(){
+    
+    int i,j;
+    printf("  ");
+    for(i=0;i<NOV;i++){
+        printf("%c ",i+65);
+    }
+    printf("\n");
+    for(i=0;i<NOV;i++){
+        printf("%c ",i+65);
+        for(j=0;j<NOV;j++){
+            printf("%d ",ajmat[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+
+void connector(char start,char toConnect, int w){
+    
+    newnode=(NODE *)malloc(sizeof(NODE));
+    newnode->ch = toConnect;
+    newnode->w = w;
+    newnode->next = NULL;
+    
+    if(header[start-65] == NULL){
+        header[start-65] = newnode;
+    }
+    else{
+        for(tptr = header[start-65];tptr->next!=NULL;tptr=tptr->next);
+        tptr->next = newnode;
+    }
+    
+}
+
+void createArrOfLL(){
+    
+    int i;
+    for(i=0;i<NOE;i++){
+        connector(data[i].ch1,data[i].ch2,data[i].w);
+        connector(data[i].ch2,data[i].ch1,data[i].w);
+    }
+}
+
+void printArrOfLL(){
+    
+    int i,j;
+    for(i=0;i<NOV;i++){
+        printf("%c ",i+65);
+        for(tptr = header[i];tptr;tptr=tptr->next)
+            printf("-(%d)-> %c ",tptr->w,tptr->ch);
+        printf("\n");
+    }
+}
+
+void addToList(HEAD *headptr,char s,char e,int wt){
+   
+    newnode=(NODE *)malloc(sizeof(NODE));
+    newnode->ch = e;
+    newnode->w = wt;
+    newnode->next = NULL;
+    
+    if(headptr->nnext == NULL){
+        headptr->nnext = newnode;
+    }
+    else{
+        for(tptr=headptr->nnext;tptr && ((tptr->ch) < e);tptr=tptr->next);
+        
+        if(tptr == headptr->nnext){
+            newnode->next = headptr->nnext;
+            headptr->nnext = newnode;
+        }
+        else if(tptr == NULL){
+            prev->next = newnode;
+        }
+        else{
+            newnode->next = tptr;
+            prev->next = newnode;
+        }
+    }
+}
+
+void createHeader(char s,char e,int wt){
+    for(hptr = hstart;hptr && hptr->headName != s;hptr=hptr->hnext);
+        if(hptr == NULL){
+            newHeader = (HEAD *)malloc(sizeof(HEAD));
+            newHeader->headName = s;
+            newHeader->hnext = NULL;
+            newHeader->nnext = NULL;
+            
+            if(hstart == NULL)
+                hstart = newHeader;
+            else{
+                for(hptr = hstart,hprev=NULL;hptr && hptr->headName <=s;hprev=hptr,hptr=hptr->hnext);
+                
+                if(hptr == hstart){
+                    newHeader->hnext = hstart;
+                    hstart = newHeader;
+                }
+                else if(hptr == NULL){
+                    hprev->hnext = newHeader;
+                }
+                else{
+                    newHeader->hnext = hptr;
+                    hprev->hnext = newHeader;
+                }
+            }
+            hptr = newHeader;
+        }
+        addToList(hptr,hptr->headName,e, wt);
+}
+
+void printLLOfLL(){
+    
+    for(printf("\n"),hptr = hstart;hptr;hptr=hptr->hnext){
+        printf("%c\t\t",hptr->headName);
+        for(tptr = hptr->nnext;tptr;tptr =tptr->next){
+            printf("%c(%d) ",tptr->ch,tptr->w);
+        }
+        printf("\n");
+    }
+}
+
+void createLLofLL(){
+    
+    char s,e;
+    int wt,i;
+    
+    for(i=0;i<NOE;i++){
+        s=data[i].ch1;
+        e=data[i].ch2;
+        wt=data[i].w;
+        
+        createHeader(s,e,wt);
+    }
+    printLLOfLL();
+}
+
+
+int main()
+{
+        
+    
+    /*createAdjacencyMat();
+    printAdjacencyMatrix();
+    
+    printf("\n\n");
+    
+    createArrOfLL();
+    printArrOfLL();
+    */
+    
+    createHeader('A','B',5);
+    createHeader('E','D',15);
+    createHeader('Z','D',15);
+    printLLOfLL();
+    
+    return 0;
+}
