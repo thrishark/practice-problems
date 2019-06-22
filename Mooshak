@@ -1,6 +1,6 @@
 #include<stdio.h>
-#define M 3
-#define N 3
+#define M 4
+#define N 4
 
 int isvalid(int maze[M][N],int r,int c){
     if(r>=0 && r<M && c>=0 && c<N && maze[r][c])
@@ -27,8 +27,11 @@ int printMaze(int solution[M][N]){
 int getSol(int maze[M][N],int r,int c,int solution[M][N]){
     
     
-    
+
     if(isvalid(maze,r,c)){
+        
+        if(maze[r][c] == 2) 
+            return 0;
         
         if(maze[r][c] == 9){
             solution[r][c]=9;
@@ -36,6 +39,7 @@ int getSol(int maze[M][N],int r,int c,int solution[M][N]){
         }
         else if(maze[r][c] == 1){
             
+            maze[r][c]=2;   
             solution[r][c]=1;
             
             if(getSol(maze,r+1,c,solution) == 1)
@@ -46,8 +50,9 @@ int getSol(int maze[M][N],int r,int c,int solution[M][N]){
                 return 1;
             if(getSol(maze,r,c-1,solution) == 1)
                 return 1;
-                
+            
             solution[r][c]=0;
+            maze[r][c]=1;
             return 0;
         }
         
@@ -60,9 +65,10 @@ int getSol(int maze[M][N],int r,int c,int solution[M][N]){
 
 int main(){
     
-    int maze[M][N]={{1,1,1},
-                    {1,1,0},
-                    {0,1,9}    
+    int maze[M][N]={{1,1,1,9},
+                    {1,0,0,1},
+                    {1,1,1,1},
+                    {0,1,0,1}
     };
     
     int solution[M][N]={0};
