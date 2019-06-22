@@ -30,27 +30,39 @@ int getSol(int maze[M][N],int r,int c,int solution[M][N]){
 
     if(isvalid(maze,r,c)){
         
+        // if it is already visited, don't visit again
         if(maze[r][c] == 2) 
             return 0;
         
+        //base case - reached the cheese
         if(maze[r][c] == 9){
             solution[r][c]=9;
             return 1;
         }
         else if(maze[r][c] == 1){
             
+            // marking that the place is visited
             maze[r][c]=2;   
             solution[r][c]=1;
             
+            //explore down
             if(getSol(maze,r+1,c,solution) == 1)
                 return 1;
+                
+            //explore right
             if(getSol(maze,r,c+1,solution) == 1)
                 return 1;
+                
+            //explore up
             if(getSol(maze,r-1,c,solution) == 1)
                 return 1;
+                
+            //explore left
             if(getSol(maze,r,c-1,solution) == 1)
                 return 1;
             
+            //if the paths explored from the current place does not lead to cheese, unmark the place from solution[][]
+            //return 0 to specify that this maze[r][c] does not lead to cheese
             solution[r][c]=0;
             maze[r][c]=1;
             return 0;
